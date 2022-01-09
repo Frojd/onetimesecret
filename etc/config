@@ -40,7 +40,7 @@
   :passphrase: CHANGEME
   :regex: \A[a-zA-Z0-9]{6}\z
 :locales:
-  - ar
+  #- ar
   - bg
   - ca_ES
   - cn
