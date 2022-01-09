@@ -1,0 +1,32 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    proxy_read_timeout 120s;
+
+    server_name ${SERVER_NAME} _;
+
+    listen 443 ssl;
+    ssl_certificate /etc/nginx/certs/cert.pem;
+    ssl_certificate_key /etc/nginx/certs/cert-key.pem;
+
+    client_max_body_size 128M;
+
+    gzip on;
+    gzip_proxied any;
+    gzip_types text/plain text/xml text/css application/x-javascript;
+    gzip_vary on;
+    gzip_disable “MSIE [1-6]\.(?!.*SV1)”;
+
+    sendfile on;
+    sendfile_max_chunk 512k;
+
+    access_log off;
+
+    location / {
+        proxy_set_header Host $host:40000;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://host.docker.internal:3000;
+    }
+}

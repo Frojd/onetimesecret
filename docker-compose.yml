@@ -1,0 +1,30 @@
+version: '3.2'
+services:
+    web:
+        image: nginx:alpine
+        ports:
+            - "40000:443"
+        links:
+            - onetimesecret
+        volumes:
+            - "./docker/nginx.conf.template:/etc/nginx/templates/default.conf.template:cached"
+            - "./docker/certs:/etc/nginx/certs"
+        environment:
+            - SERVER_NAME=example.com.test
+    onetimesecret:
+        image: frojd/onetimesecret
+        ports:
+            - "3000:3000"
+        depends_on:
+            - redis
+        environment:
+            - ONETIMESECRET_SSL=true
+            - ONETIMESECRET_HOST=example.com.test:40000
+            - ONETIMESECRET_SECRET=CHANGEME
+            - ONETIMESECRET_REDIS_URL=redis://redis:6379/0
+            - ONETIMESECRET_COLONEL=
+    redis:
+        image: redis:3.2
+        command: redis-server
+        ports:
+            - "6379:6379"
