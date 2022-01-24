@@ -17,6 +17,11 @@ services:
             - "3000:3000"
         depends_on:
             - redis
+        volumes:
+            # Example: Override settings
+            #- type: bind
+            #  source: ${PWD}/docker/onetime/etc/config
+            #  target: /usr/src/app/etc/config
         environment:
             - ONETIMESECRET_SSL=true
             - ONETIMESECRET_HOST=example.com.test:40000
